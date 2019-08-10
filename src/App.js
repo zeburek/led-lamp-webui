@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Row, Col, Form, FormGroup, Button, Input, InputGroup, InputGroupAddon, InputGroupText } from "reactstrap";
+import { Container, Row, Col, Form, FormGroup, Button, Input, InputGroup, InputGroupText } from "reactstrap";
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import './App.css';
 import NavBarComponent from './components/NavBar';
@@ -19,6 +19,13 @@ const emptyRow = {
       "color": "red",
       "enabled": false
   }
+}
+
+const EVENTS = {
+  effects: "EFFECTS_CHANGED",
+  alarms: "ALARMS_CHANGED",
+  working: "WORKING",
+  activeEffect: "ACTIVE_EFFECT",
 }
 
 class App extends React.Component{
@@ -44,8 +51,18 @@ class App extends React.Component{
     }
   }
 
-  sendUpdatedState() {
-    websocket.send(JSON.stringify(this.state))
+  sendEvent(eventName, data) {
+    websocket.send(JSON.stringify({
+      event: eventName,
+      data: data
+    }))
+  }
+
+  changeWorking(){
+    this.setState((state) => {
+      this.sendEvent(EVENTS.working, !state.working)
+      return { working: !state.working }
+    })
   }
 
   onUpdateItem(array_name, i, name, value){
@@ -53,6 +70,7 @@ class App extends React.Component{
       const array = state[array_name].map((item, j) => {
         if (j === i) {
           item[name] = value;
+          this.sendEvent(EVENTS[array_name], item)
         }
         return item;
       });
@@ -145,13 +163,13 @@ class App extends React.Component{
     return (
       <div className="wrapper">
         <Container>
-          <NavBarComponent sendUpdatedState={() => this.sendUpdatedState()} />
+          <NavBarComponent/>
           <h1 className="mt-2">
             LED {this.state.working ? "working":"not working"}
             <Button 
               color="primary"
               className="float-right"
-              onClick={() => this.setState({working: !this.state.working})}
+              onClick={() => this.changeWorking()}
               active={this.state.working}
               size="lg"
             > 

@@ -2,7 +2,31 @@ const webSocketsServerPort = 8000;
 const webSocketServer = require('websocket').server;
 const http = require('http');
 // Spinning the http server and the websocket server.
-const server = http.createServer();
+
+const requestHandler = (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+	res.setHeader('Access-Control-Request-Method', '*');
+	res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST');
+	res.setHeader('Access-Control-Allow-Headers', '*');
+	if ( req.method === 'OPTIONS' ) {
+		res.writeHead(200);
+		res.end();
+		return;
+  }
+  let body = '';
+  req.on('data', chunk => {
+      body += chunk.toString(); // convert Buffer to string
+  });
+  req.on('end', () => {
+      console.log(body);
+      res.end('ok');
+  });
+  console.log(req.url);
+  console.log(body);
+  res.end('Hello Node.js Server!');
+}
+
+const server = http.createServer(requestHandler);
 server.listen(webSocketsServerPort);
 const wsServer = new webSocketServer({
   httpServer: server

@@ -1,13 +1,12 @@
 import React from 'react';
 import { Container, Row, Col, Form, FormGroup, Button, Input, InputGroup, InputGroupText } from "reactstrap";
-import { w3cwebsocket as W3CWebSocket } from "websocket";
 import './App.css';
 import NavBarComponent from './components/NavBar';
 import { title } from './utils';
 import { fieldsConf } from './components/fieldsConfiguration';
 import EffectsList from './components/EffectsList';
-
-const websocket = W3CWebSocket('ws://localhost:8000/');
+import { websocket } from './requests';
+import UpdateModal from './components/UpdateModal';
 
 const EVENTS = {
   effects: "EFFECTS_CHANGED",
@@ -26,6 +25,7 @@ class App extends React.Component{
       alarms: [],
       working: null,
       activeEffect: null,
+      modalIsOpen: false,
     }
   }
 
@@ -44,6 +44,12 @@ class App extends React.Component{
       event: eventName,
       data: data
     }))
+  }
+
+  toggleModal() {
+    this.setState(state => ({
+      modalIsOpen: !state.modalIsOpen
+    }));
   }
 
   changeWorking(){
@@ -164,7 +170,11 @@ class App extends React.Component{
     return (
       <div className="wrapper">
         <Container>
-          <NavBarComponent/>
+          {
+            this.state.modalIsOpen && 
+            <UpdateModal isOpen={this.state.modalIsOpen} toggle={this.toggleModal.bind(this)}/>
+          }
+          <NavBarComponent toggleModal={this.toggleModal.bind(this)}/>
           <h1 className="mt-2">
             LED {this.state.working ? "working":"not working"}
             <Button 

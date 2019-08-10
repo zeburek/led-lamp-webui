@@ -1,11 +1,16 @@
 import React from 'react';
-import { Navbar, NavbarBrand } from "reactstrap";
+import { Navbar, NavbarBrand, Nav, NavItem, Button } from "reactstrap";
 
-const NavBarComponent = () => {
+const NavBarComponent = (props) => {
   return (
     <header>
         <Navbar color="light" light expand="md">
           <NavbarBrand href="/">LEDanager</NavbarBrand>
+          <Nav navbar>
+              <NavItem>
+                <Button onClick={() => props.toggleModal()}>Update</Button>
+              </NavItem>
+            </Nav>
         </Navbar>
       </header>
   )

@@ -5,6 +5,7 @@ import './App.css';
 import NavBarComponent from './components/NavBar';
 import { title } from './utils';
 import { fieldsConf } from './components/fieldsConfiguration';
+import EffectsList from './components/EffectsList';
 
 const websocket = W3CWebSocket('ws://localhost:8000/');
 
@@ -24,6 +25,7 @@ class App extends React.Component{
       effects: [],
       alarms: [],
       working: null,
+      activeEffect: null,
     }
   }
 
@@ -32,7 +34,6 @@ class App extends React.Component{
       console.log("WebSocket connection opened")
     }
     websocket.onmessage = (message) => {
-      console.log(message)
       const data = JSON.parse(message.data);
       this.setState({...data})
     }
@@ -49,6 +50,13 @@ class App extends React.Component{
     this.setState((state) => {
       this.sendEvent(EVENTS.working, !state.working)
       return { working: !state.working }
+    })
+  }
+
+  setActiveEffect(value){
+    this.setState((state) => {
+      this.sendEvent(EVENTS.activeEffect, value)
+      return { activeEffect: value }
     })
   }
 
@@ -139,7 +147,13 @@ class App extends React.Component{
   }
 
   renderEffects() {
-    return this.renderGroup("effects");
+    return (
+      <EffectsList
+        data={this.state.effects}
+        handleChange={this.handleListChange.bind(this)}
+        activeEffect={this.state.activeEffect}
+        setActiveEffect={this.setActiveEffect.bind(this)}/>
+    );
   }
 
   renderAlarms() {

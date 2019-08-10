@@ -1,24 +1,18 @@
 import React from 'react';
-import { Container, Row, Col, Form, FormGroup, Button, Input, InputGroup, InputGroupAddon, InputGroupText } from "reactstrap";
+import { Container, Row, Col, Form, FormGroup, Button, Input, InputGroup, InputGroupText } from "reactstrap";
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import './App.css';
 import NavBarComponent from './components/NavBar';
-import { getInputType, title } from './utils';
+import { title } from './utils';
+import { fieldsConf } from './components/fieldsConfiguration';
 
 const websocket = W3CWebSocket('ws://localhost:8000/');
 
-const emptyRow = {
-  effects: {
-      "name": "New effect",
-      "speed": 0,
-      "scale": 0,
-      "brightness": 0
-  },
-  alarms: {
-      "time": "07:00",
-      "color": "red",
-      "enabled": false
-  }
+const EVENTS = {
+  effects: "EFFECTS_CHANGED",
+  alarms: "ALARMS_CHANGED",
+  working: "WORKING",
+  activeEffect: "ACTIVE_EFFECT",
 }
 
 class App extends React.Component{
@@ -44,8 +38,18 @@ class App extends React.Component{
     }
   }
 
-  sendUpdatedState() {
-    websocket.send(JSON.stringify(this.state))
+  sendEvent(eventName, data) {
+    websocket.send(JSON.stringify({
+      event: eventName,
+      data: data
+    }))
+  }
+
+  changeWorking(){
+    this.setState((state) => {
+      this.sendEvent(EVENTS.working, !state.working)
+      return { working: !state.working }
+    })
   }
 
   onUpdateItem(array_name, i, name, value){
@@ -53,6 +57,7 @@ class App extends React.Component{
       const array = state[array_name].map((item, j) => {
         if (j === i) {
           item[name] = value;
+          this.sendEvent(EVENTS[array_name], item)
         }
         return item;
       });
@@ -79,29 +84,29 @@ class App extends React.Component{
   }
 
   renderInput(data, key, index, groupName){
-    const inputType = getInputType(emptyRow[groupName][key]);
+    const inputProps = fieldsConf[groupName][key];
     return (
-      inputType === "checkbox" ?
+      inputProps.type === "checkbox" ?
       <InputGroupText key={key}>
         <Input 
-          type={inputType}
           placeholder={title(key)} 
           name={groupName + "." + key} 
           checked={data[key]} 
           data-index={index} 
           onChange={this.handleListCheckBox.bind(this)}
           addon
+          {...inputProps}
         />
       </InputGroupText>
       :
-      <Input 
-        type={inputType}
+      <Input
         key={key} 
         placeholder={title(key)} 
         name={groupName + "." + key} 
         value={data[key]} 
         data-index={index} 
-        onChange={this.handleListChange.bind(this)} 
+        onChange={this.handleListChange.bind(this)}
+        {...inputProps}
       />
     )
   }
@@ -118,7 +123,7 @@ class App extends React.Component{
               return (
                 <InputGroup key={index} className="mt-1">
                   {
-                    Object.keys(emptyRow[groupName]).map((key, i2) => {
+                    Object.keys(fieldsConf[groupName]).map((key, i2) => {
                       return(
                         this.renderInput(data, key, index, groupName)
                       )
@@ -145,13 +150,13 @@ class App extends React.Component{
     return (
       <div className="wrapper">
         <Container>
-          <NavBarComponent sendUpdatedState={() => this.sendUpdatedState()} />
+          <NavBarComponent/>
           <h1 className="mt-2">
             LED {this.state.working ? "working":"not working"}
             <Button 
               color="primary"
               className="float-right"
-              onClick={() => this.setState({working: !this.state.working})}
+              onClick={() => this.changeWorking()}
               active={this.state.working}
               size="lg"
             > 

@@ -8,35 +8,65 @@ const wsServer = new webSocketServer({
   httpServer: server
 });
 
-var working = true;
-
-var effects = [
-    {
-        "name": "Fire",
-        "speed": 200,
-        "scale": 20,
-        "brightness": 80
-    }
-];
-
-var alarms = [
-    {
-        "time": "07:00",
-        "color": "red",
-        "enabled": true
-    }
-];
+var state = {
+  "working":true,
+  "activeEffect": 0,
+  "effects":[
+    {"name":"Sparkles","speed":255,"scale":13,"brightness":25},
+    {"name":"Fire","speed":44,"scale":1,"brightness":36},
+    {"name":"Vertical rainbow","speed":34,"scale":19,"brightness":41},
+    {"name":"Horizontal rainbow","speed":125,"scale":23,"brightness":46},
+    {"name":"Color change","speed":156,"scale":1,"brightness":207},
+    {"name":"Madness 3D","speed":1,"scale":29,"brightness":107},
+    {"name":"Clouds 3D","speed":1,"scale":64,"brightness":23},
+    {"name":"Lava 3D","speed":1,"scale":18,"brightness":255},
+    {"name":"Plasma 3D","speed":1,"scale":23,"brightness":255},
+    {"name":"Rainbow 3D","speed":1,"scale":22,"brightness":255},
+    {"name":"Rainbow stripe 3D","speed":1,"scale":19,"brightness":255},
+    {"name":"Zebra 3D","speed":1,"scale":24,"brightness":255},
+    {"name":"Forest 3D","speed":1,"scale":17,"brightness":255},
+    {"name":"Ocean 3D","speed":1,"scale":19,"brightness":255},
+    {"name":"Single color","speed":1,"scale":23,"brightness":255},
+    {"name":"Snow","speed":255,"scale":33,"brightness":255},
+    {"name":"Matrix","speed":227,"scale":10,"brightness":255},
+    {"name":"Lighters","speed":255,"scale":68,"brightness":64},
+    {"name":"Clock vertical","speed":255,"scale":255,"brightness":255},
+    {"name":"Clock horizontal colored","speed":255,"scale":255,"brightness":255},
+    {"name":"Clock horizontal","speed":255,"scale":255,"brightness":255},
+    {"name":"Clock horizontal single","speed":255,"scale":255,"brightness":255}
+  ],
+  "alarms":[],
+}
 
 
 
 const sendState = (connection) => {
-  connection.sendUTF(JSON.stringify({working: working, effects: effects, alarms: alarms}))
+  connection.sendUTF(JSON.stringify(state))
 }
 
-const saveState = (object) => {
-  effects = object.effects;
-  alarms = object.alarms;
-  working = object.working;
+const updateEffects = (data) => {
+  const array = state.effects.map((item, _) => {
+    if (data.name == item.name) {
+      return data;
+    }
+    return item;
+  });
+  state.effects = array;
+}
+
+const updateWorking = (status) => {
+  state.working = status
+}
+
+const updateActiveEffect = (status) => {
+  state.activeEffect = status
+}
+
+const EVENTS = {
+  EFFECTS_CHANGED: updateEffects,
+  ALARMS_CHANGED: "",
+  WORKING: updateWorking,
+  ACTIVE_EFFECT: updateActiveEffect,
 }
 
 wsServer.on('request', function(request) {
@@ -47,8 +77,8 @@ wsServer.on('request', function(request) {
   connection.on('message', function(message) {
     if (message.type === 'utf8') {
       console.log(message);
-      const dataFromClient = JSON.parse(message.utf8Data);
-      saveState(dataFromClient);
+      const data = JSON.parse(message.utf8Data);
+      EVENTS[data.event](data.data);
     }
   });
   // user disconnected

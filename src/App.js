@@ -3,23 +3,10 @@ import { Container, Row, Col, Form, FormGroup, Button, Input, InputGroup, InputG
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import './App.css';
 import NavBarComponent from './components/NavBar';
-import { getInputType, title } from './utils';
+import { title } from './utils';
+import { fieldsConf } from './components/fieldsConfiguration';
 
 const websocket = W3CWebSocket('ws://localhost:8000/');
-
-const emptyRow = {
-  effects: {
-      "name": "New effect",
-      "speed": 0,
-      "scale": 0,
-      "brightness": 0
-  },
-  alarms: {
-      "time": "07:00",
-      "color": "red",
-      "enabled": false
-  }
-}
 
 const EVENTS = {
   effects: "EFFECTS_CHANGED",
@@ -97,29 +84,29 @@ class App extends React.Component{
   }
 
   renderInput(data, key, index, groupName){
-    const inputType = getInputType(emptyRow[groupName][key]);
+    const inputProps = fieldsConf[groupName][key];
     return (
-      inputType === "checkbox" ?
+      inputProps.type === "checkbox" ?
       <InputGroupText key={key}>
         <Input 
-          type={inputType}
           placeholder={title(key)} 
           name={groupName + "." + key} 
           checked={data[key]} 
           data-index={index} 
           onChange={this.handleListCheckBox.bind(this)}
           addon
+          {...inputProps}
         />
       </InputGroupText>
       :
-      <Input 
-        type={inputType}
+      <Input
         key={key} 
         placeholder={title(key)} 
         name={groupName + "." + key} 
         value={data[key]} 
         data-index={index} 
-        onChange={this.handleListChange.bind(this)} 
+        onChange={this.handleListChange.bind(this)}
+        {...inputProps}
       />
     )
   }
@@ -136,7 +123,7 @@ class App extends React.Component{
               return (
                 <InputGroup key={index} className="mt-1">
                   {
-                    Object.keys(emptyRow[groupName]).map((key, i2) => {
+                    Object.keys(fieldsConf[groupName]).map((key, i2) => {
                       return(
                         this.renderInput(data, key, index, groupName)
                       )

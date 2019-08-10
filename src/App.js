@@ -48,13 +48,6 @@ class App extends React.Component{
     websocket.send(JSON.stringify(this.state))
   }
 
-  onAddItem(array_name) {
-    this.setState(state => {
-      const array = state[array_name].concat(emptyRow[array_name]);
-      return { [array_name]: array };
-    });
-  };
-
   onUpdateItem(array_name, i, name, value){
     this.setState(state => {
       const array = state[array_name].map((item, j) => {
@@ -63,13 +56,6 @@ class App extends React.Component{
         }
         return item;
       });
-      return { [array_name]: array };
-    });
-  };
-
-  onRemoveItem(array_name, i) {
-    this.setState(state => {
-      const array = state[array_name].filter((item, j) => i !== j);
       return { [array_name]: array };
     });
   };
@@ -126,14 +112,6 @@ class App extends React.Component{
         <FormGroup>
           <h2 className="mt-2">
             {title(groupName)}
-            <Button 
-              color="success" 
-              outline 
-              className="ml-2 float-right"  
-              onClick={this.onAddItem.bind(this, groupName)}
-            >
-              Add
-            </Button>
           </h2>
           {
             this.state[groupName].map((data, index) => {
@@ -146,15 +124,6 @@ class App extends React.Component{
                       )
                     })
                   }
-                  <InputGroupAddon addonType="append">
-                    <Button 
-                      color="danger" 
-                      outline 
-                      onClick={this.onRemoveItem.bind(this, groupName, index)}
-                    >
-                      Delete
-                    </Button>
-                  </InputGroupAddon>
                 </InputGroup>
               )
             })

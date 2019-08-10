@@ -5,17 +5,17 @@ export const fieldsConf = {
       type: "text",
     },
     "speed": {
-      type: "number",
+      type: "range",
       min: 0,
       max: 255,
     },
     "scale": {
-      type: "number",
+      type: "range",
       min: 0,
       max: 100,
     },
     "brightness": {
-      type: "number",
+      type: "range",
       min: 0,
       max: 255,
     }

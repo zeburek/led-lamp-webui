@@ -18,11 +18,9 @@ const requestHandler = (req, res) => {
       body += chunk.toString(); // convert Buffer to string
   });
   req.on('end', () => {
-      console.log(body);
       res.end('ok');
   });
   console.log(req.url);
-  console.log(body);
   res.end('Hello Node.js Server!');
 }
 

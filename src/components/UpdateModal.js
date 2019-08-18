@@ -58,7 +58,7 @@ class UpdateModal extends React.Component {
           }
         </ModalBody>
         <ModalFooter>
-          <Button disabled={!this.state.buttonsEnabled} color="primary" onClick={this.uploadFile.bind(this)}>Upload</Button>{' '}
+          <Button disabled={!this.state.buttonsEnabled || !this.state.selectedFile} color="primary" onClick={this.uploadFile.bind(this)}>Upload</Button>{' '}
           <Button disabled={!this.state.buttonsEnabled} color="secondary" onClick={toggle.bind(this)}>Cancel</Button>
         </ModalFooter>
       </Modal>

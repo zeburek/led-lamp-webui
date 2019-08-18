@@ -66,12 +66,12 @@ class App extends React.Component{
     })
   }
 
-  onUpdateItem(array_name, i, name, value){
+  onUpdateItem(array_name, i, name, value, send_event){
     this.setState(state => {
       const array = state[array_name].map((item, j) => {
         if (j === i) {
           item[name] = value;
-          this.sendEvent(EVENTS[array_name], item)
+          if (send_event) this.sendEvent(EVENTS[array_name], item);
         }
         return item;
       });
@@ -79,18 +79,15 @@ class App extends React.Component{
     });
   };
 
-  handleListChange (evt) {
+  handleListChange (evt, update) {
     const [array_name, name] = evt.target.name.split(".");
-    const value = evt.target.value;
+    const value = evt.target.type === 'checkbox' ? evt.target.checked:evt.target.value;
     const index = parseInt(evt.target.getAttribute('data-index'));
-    this.onUpdateItem(array_name, index, name, value);
+    this.onUpdateItem(array_name, index, name, value, update);
   }
 
-  handleListCheckBox (evt) {
-    const [array_name, name] = evt.target.name.split(".");
-    const value = evt.target.checked;
-    const index = parseInt(evt.target.getAttribute('data-index'));
-    this.onUpdateItem(array_name, index, name, value);
+  handleListChangeUpdate (evt) {
+    this.handleListChange(evt, true);
   }
 
   componentWillMount() {
@@ -107,7 +104,7 @@ class App extends React.Component{
           name={groupName + "." + key} 
           checked={data[key]} 
           data-index={index} 
-          onChange={this.handleListCheckBox.bind(this)}
+          onChange={this.handleListChange.bind(this)}
           addon
           {...inputProps}
         />
@@ -157,6 +154,7 @@ class App extends React.Component{
       <EffectsList
         data={this.state.effects}
         handleChange={this.handleListChange.bind(this)}
+        handleChangeUpdate={this.handleListChangeUpdate.bind(this)}
         activeEffect={this.state.activeEffect}
         setActiveEffect={this.setActiveEffect.bind(this)}/>
     );

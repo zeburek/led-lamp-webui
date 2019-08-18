@@ -4,7 +4,7 @@ import { fieldsConf } from './fieldsConfiguration';
 import { title } from '../utils';
 
 const EffectsList = (props) => {
-  const { data, handleChange, activeEffect, setActiveEffect } = props;
+  const { data, handleChange, handleChangeUpdate, activeEffect, setActiveEffect } = props;
 
   const renderInputs = (item, index) => {
     return (
@@ -20,6 +20,7 @@ const EffectsList = (props) => {
               value={item[key]} 
               data-index={index} 
               onChange={handleChange.bind(this)}
+              onMouseUp={handleChangeUpdate.bind(this)}
               {...inputProps}
             />
           </p>

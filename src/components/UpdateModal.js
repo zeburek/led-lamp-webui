@@ -22,7 +22,7 @@ class UpdateModal extends React.Component {
 
   changeUploadProgress = (event) => {
     this.setState({
-      loaded: event.loaded / event.total * 100
+      loaded: (event.loaded / event.total * 100).toFixed(1)
     })
   } 
 
@@ -54,7 +54,7 @@ class UpdateModal extends React.Component {
             ?
             <Input type="file" id="modalInputField" onChange={this.onChangeHandler.bind(this)}/>
             :
-            <Progress value={this.state.loaded}>{this.state.loaded}%</Progress>
+            <Progress value={this.state.loaded} max={100}>{this.state.loaded}%</Progress>
           }
         </ModalBody>
         <ModalFooter>

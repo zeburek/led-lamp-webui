@@ -6,11 +6,14 @@ const NavBarComponent = (props) => {
     <header>
         <Navbar color="light" light expand="md">
           <NavbarBrand href="/">LEDanager</NavbarBrand>
-          <Nav navbar>
-              <NavItem>
-                <Button onClick={() => props.toggleModal()}>Update</Button>
-              </NavItem>
-            </Nav>
+          <Nav className="d-flex align-items-center" navbar>
+            <NavItem>
+              <Button onClick={() => props.toggleModal()}>Update</Button>
+            </NavItem>
+            <NavItem className="px-2 d-flex align-items-center" onClick={() => props.reconnect()}>
+              Connection <div className={ "ml-2 led " + (props.connection ? "led-green":"led-red") }></div>
+            </NavItem>
+          </Nav>
         </Navbar>
       </header>
   )

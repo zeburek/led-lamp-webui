@@ -26,16 +26,25 @@ class App extends React.Component{
       working: null,
       activeEffect: null,
       modalIsOpen: false,
+      webSocketConnection: false,
     }
   }
 
   initWebSocket() {
     websocket.onopen = () => {
       console.log("WebSocket connection opened")
+      this.setState({webSocketConnection: true})
     }
     websocket.onmessage = (message) => {
       const data = JSON.parse(message.data);
       this.setState({...data})
+    }
+    websocket.onclose = () => {
+      console.log("WebSocket disconnected")
+      this.setState({webSocketConnection: false})
+    }
+    websocket.onerror = (error) => {
+      console.log("WebSocket connection error: " + error)
     }
   }
 
@@ -172,7 +181,10 @@ class App extends React.Component{
             this.state.modalIsOpen && 
             <UpdateModal isOpen={this.state.modalIsOpen} toggle={this.toggleModal.bind(this)}/>
           }
-          <NavBarComponent toggleModal={this.toggleModal.bind(this)}/>
+          <NavBarComponent 
+            toggleModal={this.toggleModal.bind(this)} 
+            connection={this.state.webSocketConnection}
+            reconnect={() => websocket.reconnect()}/>
           <h1 className="mt-2">
             LED {this.state.working ? "working":"not working"}
             <Button 

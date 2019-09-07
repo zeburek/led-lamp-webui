@@ -31,3 +31,20 @@ input[type="range"]::-moz-range-thumb {
   background: #007bff;
   cursor: pointer;
 }
+
+.led{
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  display: inline-block;
+}
+
+.led-red{
+  background: radial-gradient(circle at 65% 40%, white 0%, red 49%);
+  box-shadow: 0px 0px 7px red;
+}
+
+.led-green{
+  background: radial-gradient(circle at 65% 40%, white 0%, green 49%);
+  box-shadow: 0px 0px 7px green;
+}

@@ -1,9 +1,9 @@
-import { w3cwebsocket as W3CWebSocket } from "websocket";
+import ReconnectingWebSocket from 'reconnecting-websocket';
 
 export const httpHost = window.ENV_HTTP_HOST ? window.ENV_HTTP_HOST:"http://localhost:8000";
 export const websocketHost = window.ENV_WEBSOCKET_HOST ? window.ENV_WEBSOCKET_HOST:"localhost:8000";
 
-export const websocket = W3CWebSocket(`ws://${websocketHost}/`);
+export const websocket = new ReconnectingWebSocket(`ws://${websocketHost}/`);
 
 export const status = (response) => {  
   if (response.status >= 200 && response.status < 300) {  

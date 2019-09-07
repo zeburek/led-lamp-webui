@@ -10,6 +10,7 @@
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1",
     "reactstrap": "^8.0.1",
+    "reconnecting-websocket": "^4.1.10",
     "socket.io": "^2.2.0",
     "websocket": "^1.0.29"
   },

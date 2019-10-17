@@ -10,7 +10,7 @@ class EffectsList extends React.Component {
   }
 
   render() {
-    const { data, handleChange, handleChangeUpdate, activeEffect, setActiveEffect } = this.props;
+    const { data, handleChange, activeEffect, setActiveEffect } = this.props;
 
     const renderInputs = (item, index) => {
       return (
@@ -26,7 +26,6 @@ class EffectsList extends React.Component {
                 value={item[key]} 
                 data-index={index} 
                 onChange={handleChange.bind(this)}
-                onMouseUp={handleChangeUpdate.bind(this)}
                 {...inputProps}
               />
             </p>

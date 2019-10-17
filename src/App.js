@@ -19,6 +19,8 @@ class App extends React.Component{
 
   constructor(props){
     super(props);
+
+    this.timer = null;
     
     this.state = {
       effects: [],
@@ -75,12 +77,13 @@ class App extends React.Component{
     })
   }
 
-  onUpdateItem(array_name, i, name, value, send_event){
+  onUpdateItem(array_name, i, name, value){
+    clearTimeout(this.timer)
     this.setState(state => {
       const array = state[array_name].map((item, j) => {
         if (j === i) {
           item[name] = value;
-          if (send_event) this.sendEvent(EVENTS[array_name], item);
+          this.timer = setTimeout(() => this.sendEvent(EVENTS[array_name], item), 500);
         }
         return item;
       });
@@ -88,15 +91,11 @@ class App extends React.Component{
     });
   };
 
-  handleListChange (evt, update) {
+  handleListChange (evt) {
     const [array_name, name] = evt.target.name.split(".");
     const value = evt.target.type === 'checkbox' ? evt.target.checked:evt.target.value;
     const index = parseInt(evt.target.getAttribute('data-index'));
-    this.onUpdateItem(array_name, index, name, value, update);
-  }
-
-  handleListChangeUpdate (evt) {
-    this.handleListChange(evt, true);
+    this.onUpdateItem(array_name, index, name, value);
   }
 
   componentWillMount() {
@@ -163,7 +162,6 @@ class App extends React.Component{
       <EffectsList
         data={this.state.effects}
         handleChange={this.handleListChange.bind(this)}
-        handleChangeUpdate={this.handleListChangeUpdate.bind(this)}
         activeEffect={this.state.activeEffect}
         setActiveEffect={this.setActiveEffect.bind(this)}/>
     );

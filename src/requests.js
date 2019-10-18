@@ -1,9 +1,8 @@
 import ReconnectingWebSocket from 'reconnecting-websocket';
 
-export const httpHost = window.ENV_HTTP_HOST ? window.ENV_HTTP_HOST:"http://localhost:8000";
-export const websocketHost = window.ENV_WEBSOCKET_HOST ? window.ENV_WEBSOCKET_HOST:"localhost:8000";
+export const httpHost = window.ENV_HTTP_HOST ? window.ENV_HTTP_HOST:"localhost:8000";
 
-export const websocket = new ReconnectingWebSocket(`ws://${websocketHost}/`);
+export const websocket = new ReconnectingWebSocket(`ws://${httpHost}/ws`);
 
 export const status = (response) => {  
   if (response.status >= 200 && response.status < 300) {  
@@ -27,12 +26,12 @@ function futch(url, opts={}, onProgress) {
   });
 }
 
-export const uploadSize = (size) => fetch(`${httpHost}/updateSize`, {
+export const uploadSize = (size) => fetch(`http://${httpHost}/updateSize`, {
   method: "POST",
   body: new URLSearchParams(`fileSize=${size}`)
 }).then(status)
 
-export const uploadBinary = (file, onProgress) => futch(`${httpHost}/update`, {
+export const uploadBinary = (file, onProgress) => futch(`http://${httpHost}/update`, {
   method: "POST",
   body: file
 }, onProgress)

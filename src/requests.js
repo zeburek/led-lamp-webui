@@ -1,6 +1,6 @@
 import ReconnectingWebSocket from 'reconnecting-websocket';
 
-export const websocket = new ReconnectingWebSocket(`/ws`);
+export const websocket = new ReconnectingWebSocket("ws://" + window.location.host + "/ws");
 
 export const status = (response) => {  
   if (response.status >= 200 && response.status < 300) {  

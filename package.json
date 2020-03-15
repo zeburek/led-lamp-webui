@@ -20,7 +20,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "postbuild": "gzipper --verbose ./build ./gzipped",
+    "postbuild": "gzipper --verbose --level 9 ./build ./gzipped",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "server": "node server.js"

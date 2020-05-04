@@ -32,13 +32,23 @@ class App extends React.Component{
     }
   }
 
+  async initModels() {
+    let response = await fetch("/settings.json");
+    if (response.ok) {
+      let json = await response.json();
+      this.setState({...json})
+    } else {
+      console.log("Error loading settings: " + response.status)
+    }
+  }
+
   initWebSocket() {
     websocket.onopen = () => {
       console.log("WebSocket connection opened")
       this.setState({webSocketConnection: true})
     }
     websocket.onmessage = (message) => {
-      const data = JSON.parse(message.data);
+      const data = JSON.parse(message.data)
       this.setState({...data})
     }
     websocket.onclose = () => {
@@ -46,7 +56,7 @@ class App extends React.Component{
       this.setState({webSocketConnection: false})
     }
     websocket.onerror = (error) => {
-      console.log("WebSocket connection error: " + error)
+      console.log("WebSocket connection error: " + JSON.stringify(error))
     }
   }
 
@@ -99,6 +109,7 @@ class App extends React.Component{
   }
 
   componentWillMount() {
+    this.initModels()
     this.initWebSocket()
   }
 

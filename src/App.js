@@ -35,8 +35,8 @@ class App extends React.Component{
   async initModels() {
     let response = await fetch("/effects");
     if (response.ok) {
-      let json = await response.json();
-      this.setState({...json})
+      let json = await response.json()
+      this.setState({effects: json.effects})
     } else {
       console.log("Error loading settings: " + response.status)
     }

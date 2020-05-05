@@ -36,7 +36,7 @@ class App extends React.Component{
     let response = await fetch("/effects");
     if (response.ok) {
       let json = await response.json()
-      this.setState({effects: json.effects})
+      this.state.effects =  json.effects
     } else {
       console.log("Error loading settings: " + response.status)
     }

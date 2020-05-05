@@ -33,7 +33,7 @@ class App extends React.Component{
   }
 
   async initModels() {
-    let response = await fetch("/settings.json");
+    let response = await fetch("/effects");
     if (response.ok) {
       let json = await response.json();
       this.setState({...json})

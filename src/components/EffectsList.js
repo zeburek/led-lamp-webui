@@ -50,10 +50,10 @@ class EffectsList extends React.Component {
                 data.map((item, index) => {
                   return (
                     <ListGroupItem
-                      key={item.name}
+                      key={item.n}
                       active={index === activeEffect}
                       onClick={() => setActiveEffect(index)}>
-                      {item.name}
+                      {item.n}
                     </ListGroupItem>
                   )
                 })

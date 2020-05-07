@@ -1,20 +1,20 @@
 export const fieldsConf = {
   effects: {
-    "name": {
+    "n": {
       disabled: true,
       type: "text",
     },
-    "speed": {
+    "s": {
       type: "range",
       min: 0,
       max: 255,
     },
-    "scale": {
+    "l": {
       type: "range",
       min: 0,
       max: 100,
     },
-    "brightness": {
+    "b": {
       type: "range",
       min: 0,
       max: 255,

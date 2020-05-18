@@ -17,13 +17,29 @@ const Control = ({ effectKey, value, handleChangeForm }) => {
       <h3>
         {title(effectKey)}: <span className="text-secondary">{value}</span>
       </h3>
-      <input
-        placeholder={title(effectKey)}
-        name={effectKey}
-        value={inputValue}
-        onChange={handleChangeForm}
-        {...memoizedProps}
-      />
+      {typeof value === `boolean` ? (
+        <label className="switch">
+          <input
+            placeholder={title(effectKey)}
+            name={effectKey}
+            value={inputValue}
+            onChange={handleChangeForm}
+            {...(typeof inputValue === `boolean` && { checked: inputValue })}
+            {...memoizedProps}
+          />
+          <div />
+        </label>
+      ) : (
+        <input
+          className="control"
+          placeholder={title(effectKey)}
+          name={effectKey}
+          value={inputValue}
+          onChange={handleChangeForm}
+          {...(typeof inputValue === `boolean` && { checked: inputValue })}
+          {...memoizedProps}
+        />
+      )}
     </div>
   )
 }

@@ -7,7 +7,6 @@ export const fieldsConf = {
       type: 'text',
     },
     n: {
-      disabled: true,
       type: 'text',
     },
     s: {

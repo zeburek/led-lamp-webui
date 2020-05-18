@@ -31,7 +31,13 @@ export const Effects = ({ activeWSEffect }) => {
   }, [])
 
   useEffect(() => {
-    if(activeWSEffect !== activeEffect) {
+    if (activeWSEffect !== activeEffect) {
+      setActiveEffect(activeWSEffect)
+    }
+  }, [activeWSEffect])
+
+  useEffect(() => {
+    if (activeWSEffect !== activeEffect) {
       sendWSEvent(EVENTS.activeEffect, activeEffect)
     }
   }, [activeEffect])

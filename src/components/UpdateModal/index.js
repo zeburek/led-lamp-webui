@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { uploadSize, uploadBinary } from '../../helpers/requests'
+import { EmojiBtn } from '../EmojiBtn'
 
 export const UpdateModal = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -31,14 +32,21 @@ export const UpdateModal = () => {
 
   return (
     <>
-      <button title="Update" className="icon-btn" onClick={handleOpen}>
-        {String.fromCodePoint(0x1F4E5)}
-      </button>
+      <EmojiBtn title="Update" className="icon-btn" onClick={handleOpen}>
+        {String.fromCodePoint(0x1f4e5)}
+      </EmojiBtn>
       <div className={`modal-backdrop ${isOpen ? 'active' : ''}`} />
       <div className={`modal ${isOpen ? 'active' : ''}`}>
         <h2 className="modal-heading">Upload new firmware</h2>
         <input type="file" id="modalInputField" onChange={handleSelectFile} />
-        {loading && <div className="progress">progress: {progress}%</div>}
+        {loading && (
+          <div className="progress-bar">
+            <span
+              className="progress-bar-fill"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+        )}
         <div className="modal-actions">
           <button
             className="button mr-1"

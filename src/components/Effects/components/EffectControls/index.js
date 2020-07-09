@@ -63,7 +63,7 @@ export const EffectControl = ({ effect = {}, setEffects, activeEffect }) => {
     return () => {
       clearTimeout(handler)
     }
-  }, [formState])
+  }, [formState]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleChangeForm = (e) => {
     let value

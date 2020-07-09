@@ -34,13 +34,13 @@ export const Effects = ({ activeWSEffect }) => {
     if (activeWSEffect !== activeEffect) {
       setActiveEffect(activeWSEffect)
     }
-  }, [activeWSEffect])
+  }, [activeWSEffect]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (activeWSEffect !== activeEffect) {
       sendWSEvent(EVENTS.activeEffect, activeEffect)
     }
-  }, [activeEffect])
+  }, [activeEffect]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="grid-container-layout">

@@ -2,12 +2,21 @@ import ReconnectingWebSocket from 'reconnecting-websocket';
 
 export const websocket = new ReconnectingWebSocket("ws://" + window.location.host + "/ws");
 
-export const status = (response) => {  
-  if (response.status >= 200 && response.status < 300) {  
-    return Promise.resolve(response)  
-  } else {  
-    return Promise.reject(new Error(response.statusText))  
-  }  
+export const sendWSEvent = (eventName, data) => {
+    websocket.send(
+      JSON.stringify({
+        event: eventName,
+        data: data,
+      })
+    )
+}
+
+export const status = (response) => {
+  if (response.status >= 200 && response.status < 300) {
+    return Promise.resolve(response)
+  } else {
+    return Promise.reject(new Error(response.statusText))
+  }
 };
 
 function futch(url, opts={}, onProgress) {

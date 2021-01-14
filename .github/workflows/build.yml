@@ -1,0 +1,63 @@
+name: node build
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Cache npm
+      uses: actions/cache@v2
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    - name: Build webui
+      run: |
+        set -x
+        npm install
+        npm run build
+
+    - name: Prepare data
+      run: |
+        set -x
+        mkdir -p data
+        for f in $(find gzipped/static -name "*.js.gz" -o -name "*.css.gz"); do cp -f $f data; done
+        cp -f gzipped/index.html.gz data
+        cp -f gzipped/favicon.ico.gz data
+        zip -r data.zip data
+        mv data.zip data
+      
+    - name: Upload build result
+      uses: actions/upload-artifact@v2
+      with:
+        name: artifacts
+        path: data
+
+    - name: Create release
+      if: github.ref == 'refs/heads/master'
+      run: |
+        set -x
+        assets=()
+        for asset in data/*.gz; do
+          assets+=("-a" "$asset")
+        done
+        for asset in artifacts/*.zip; do
+          assets+=("-a" "$asset")
+        done
+        RELEASE_TAG="$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
+        hub release create "${assets[@]}" -m "$RELEASE_TAG" "$RELEASE_TAG"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
